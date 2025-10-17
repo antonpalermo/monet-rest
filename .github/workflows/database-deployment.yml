@@ -1,0 +1,30 @@
+name: database deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  deploy:
+    name: deploy database to production
+    runs-on: ubuntu-latest
+
+    if: github.event.pull_request.merged == true
+
+    steps:
+      - name: checkout codebase
+        uses: actions/checkout@v4
+
+      - name: setup bun environment
+        uses: oven-sh/setup-bun@v2
+
+      - name: install project deps
+        run: bun install --frozen-lockfile
+
+      - name: deploy migrations
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+        run: bun drizzle:migrate:prod
