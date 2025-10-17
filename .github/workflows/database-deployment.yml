@@ -25,4 +25,6 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: deploy migrations
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
         run: bun drizzle:migrate:prod
