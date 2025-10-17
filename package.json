@@ -9,6 +9,7 @@
     "deploy:dev": "wrangler deploy --minify --env development",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "drizzle:gen": "drizzle-kit generate",
+    "drizzle:migrate:prod": "NODE_ENV='development' bun drizzle-kit migrate",
     "drizzle:migrate:dev": "NODE_ENV='development' bun drizzle-kit migrate"
   },
   "dependencies": {
