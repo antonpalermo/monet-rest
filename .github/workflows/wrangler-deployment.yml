@@ -13,6 +13,9 @@ jobs:
       - name: checkout codebase
         uses: actions/checkout@v4
 
+      - name: setup bun environment
+        uses: oven-sh/setup-bun@v2
+
       - name: deploying workers
         uses: cloudflare/wrangler-action@v3
         with:
@@ -20,5 +23,6 @@ jobs:
           accountId: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
           secrets: |
             DATABASE_URL
+          packageManager: bun
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
