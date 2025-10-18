@@ -4,6 +4,7 @@
   "main": "server.ts",
   "compatibility_date": "2025-10-16",
   "env": {
+    "production": {},
     "development": {}
   },
   "observability": {
