@@ -21,8 +21,10 @@ jobs:
         with:
           apiToken: ${{secrets.CLOUDFLARE_API_TOKEN}}
           accountId: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
+          environment: production
           secrets: |
             DATABASE_URL
           packageManager: bun
+          wranglerVersion: 4.43.0
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
