@@ -16,9 +16,6 @@ jobs:
       - name: setup bun environment
         uses: oven-sh/setup-bun@v2
 
-      - name: install updated wrangler version
-        run: bun install wrangler@latest
-
       - name: deploying workers
         uses: cloudflare/wrangler-action@v3
         with:
