@@ -4,7 +4,7 @@ import { secureHeaders } from "hono/secure-headers";
 
 import entriesRoutes from "./routes/entries.route";
 
-const app = new Hono<{ Bindings: CloudflareBindings }>();
+const app = new Hono<{ Bindings: CloudflareBindings }>().basePath("/api");
 
 app.use(logger());
 app.use(secureHeaders());
