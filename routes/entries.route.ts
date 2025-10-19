@@ -93,10 +93,29 @@ app
       message: "ok"
     });
   })
-  .delete("/:id", c => {
-    return c.json({
-      message: "ok"
-    });
+  .delete("/:id", async ctx => {
+    const psql = neon(ctx.env.DATABASE_URL);
+    const db = drizzle(psql);
+
+    const id = ctx.req.param("id");
+
+    try {
+      const result = await db.delete(entry).where(eq(entry.id, id)).returning();
+
+      if (!result.length) {
+        return ctx.notFound();
+      }
+
+      return ctx.json({
+        data: result[0],
+        message: `${id} successfully removed`
+      });
+    } catch (error) {
+      throw new HTTPException(500, {
+        message: "internal server error",
+        cause: error
+      });
+    }
   });
 
 export default app;
