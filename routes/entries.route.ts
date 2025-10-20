@@ -88,10 +88,34 @@ app
       });
     }
   })
-  .patch("/:id", c => {
-    return c.json({
-      message: "ok"
-    });
+  .patch("/:id", async ctx => {
+    const psql = neon(ctx.env.DATABASE_URL);
+    const db = drizzle(psql);
+
+    const id = ctx.req.param("id");
+    const body = await ctx.req.json();
+
+    try {
+      const result = await db
+        .update(entry)
+        .set({ ...body })
+        .where(eq(entry.id, id))
+        .returning();
+
+      if (!result.length) {
+        return ctx.notFound();
+      }
+
+      return ctx.json({
+        data: result[0],
+        message: "successfully updated"
+      });
+    } catch (error) {
+      throw new HTTPException(500, {
+        message: "internal server error",
+        cause: error
+      });
+    }
   })
   .delete("/:id", c => {
     return c.json({
