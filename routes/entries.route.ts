@@ -16,6 +16,11 @@ const paramSchema = z.object({
   id: z.string().regex(/^[0-9A-Z]{25}$/)
 });
 
+const entrySchema = z.object({
+  description: z.string().min(3).max(250),
+  amount: z.number().positive()
+});
+
 app
   // get all entries
   .get("/", async ctx => {
@@ -95,35 +100,41 @@ app
       });
     }
   })
-  .patch("/:id", async ctx => {
-    const psql = neon(ctx.env.DATABASE_URL);
-    const db = drizzle(psql);
+  .patch(
+    "/:id",
+    validate("param", paramSchema),
+    validate("json", entrySchema.partial().strict()),
+    async ctx => {
+      const psql = neon(ctx.env.DATABASE_URL);
+      const db = drizzle(psql);
 
-    const id = ctx.req.param("id");
-    const body = await ctx.req.json();
+      const { id } = ctx.req.param();
 
-    try {
-      const result = await db
-        .update(entry)
-        .set({ ...body })
-        .where(eq(entry.id, id))
-        .returning();
+      const body = await ctx.req.json();
 
-      if (!result.length) {
-        return ctx.notFound();
+      try {
+        const result = await db
+          .update(entry)
+          .set({ ...body })
+          .where(eq(entry.id, id))
+          .returning();
+
+        if (!result.length) {
+          return ctx.notFound();
+        }
+
+        return ctx.json({
+          data: result[0],
+          message: "successfully updated"
+        });
+      } catch (error) {
+        throw new HTTPException(500, {
+          message: "internal server error",
+          cause: error
+        });
       }
-
-      return ctx.json({
-        data: result[0],
-        message: "successfully updated"
-      });
-    } catch (error) {
-      throw new HTTPException(500, {
-        message: "internal server error",
-        cause: error
-      });
     }
-  })
+  )
   .delete("/:id", async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
