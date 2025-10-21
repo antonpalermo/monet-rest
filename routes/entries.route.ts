@@ -1,3 +1,5 @@
+import z from "zod";
+
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
@@ -6,8 +8,13 @@ import { desc, eq, gt, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 
 import { entry } from "../database/schemas/entry";
+import { validate } from "../libs/validation";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
+
+const paramSchema = z.object({
+  id: z.string().regex(/^[0-9A-Z]{25}$/)
+});
 
 app
   // get all entries
@@ -64,11 +71,11 @@ app
       });
     }
   })
-  .get("/:id", async ctx => {
+  .get("/:id", validate("param", paramSchema), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
-    const id = ctx.req.param("id");
+    const { id } = ctx.req.param();
 
     try {
       const result = await db.select().from(entry).where(eq(entry.id, id));
