@@ -90,7 +90,7 @@ app
       }
 
       return ctx.json({
-        data: result,
+        data: result[0],
         message: "successfully get all entries"
       });
     } catch (error) {
