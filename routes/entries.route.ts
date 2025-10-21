@@ -135,11 +135,11 @@ app
       }
     }
   )
-  .delete("/:id", async ctx => {
+  .delete("/:id", validate("param", paramSchema), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
-    const id = ctx.req.param("id");
+    const { id } = ctx.req.param();
 
     try {
       const result = await db.delete(entry).where(eq(entry.id, id)).returning();
