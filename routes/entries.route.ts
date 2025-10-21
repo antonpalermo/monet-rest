@@ -47,7 +47,7 @@ app
     }
   })
   // creates a new entry in the ledger
-  .post("/create", async ctx => {
+  .post("/create", validate("json", entrySchema.strict()), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
