@@ -17,7 +17,7 @@ export const ledger = pgTable(
       .$onUpdate(() => new Date())
       .notNull()
   },
-  table => [index("entries_id_index").on(table.id)]
+  table => [index("ledger_id_index").on(table.id)]
 );
 
 export const ledgerRelations = relations(ledger, ({ many }) => ({
