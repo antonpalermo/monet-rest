@@ -17,6 +17,7 @@ const paramSchema = z.object({
 });
 
 const entrySchema = z.object({
+  ledgerId: z.string().regex(/^[0-9A-Z]{25}$/),
   description: z.string().min(3).max(250),
   amount: z.number().positive()
 });
@@ -58,7 +59,8 @@ app
         .insert(entry)
         .values({
           description: body.description,
-          amount: body.amount
+          amount: body.amount,
+          ledgerId: body.ledgerId
         })
         .returning();
 
