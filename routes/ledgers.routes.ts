@@ -8,9 +8,22 @@ const app = new Hono<{ Bindings: CloudflareBindings }>();
 
 app
   .get("/", async ctx => {
-    return ctx.json({
-      message: "ok"
-    });
+    const psql = neon(ctx.env.DATABASE_URL);
+    const db = drizzle(psql);
+
+    try {
+      // TODO: only return ledgers that are belong to a user.
+      const result = await db.select().from(ledger);
+      return ctx.json({
+        data: result,
+        message: "successfully get all legers"
+      });
+    } catch (error) {
+      throw new HTTPException(500, {
+        message: "internal server error",
+        cause: error
+      });
+    }
   })
   .post("/create", async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
