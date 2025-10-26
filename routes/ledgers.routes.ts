@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { Hono } from "hono";
 import { ledger } from "../database/schemas/ledger";
 import { HTTPException } from "hono/http-exception";
+import { eq } from "drizzle-orm";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
@@ -52,9 +53,24 @@ app
     }
   })
   .get("/:id", async ctx => {
-    return ctx.json({
-      message: "ok"
-    });
+    const psql = neon(ctx.env.DATABASE_URL);
+    const db = drizzle(psql);
+
+    const { id } = ctx.req.param();
+
+    try {
+      const result = await db.select().from(ledger).where(eq(ledger.id, id));
+
+      return ctx.json({
+        data: result[0],
+        message: "ledger successfully created"
+      });
+    } catch (error) {
+      throw new HTTPException(500, {
+        message: "internal server error",
+        cause: error
+      });
+    }
   })
   .patch("/:id", async ctx => {
     return ctx.json({
