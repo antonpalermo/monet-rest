@@ -4,8 +4,14 @@ import { Hono } from "hono";
 import { ledger } from "../database/schemas/ledger";
 import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
+import z from "zod";
+import { validate } from "../libs/validation";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
+
+const paramSchema = z.object({
+  id: z.string().regex(/^[0-9A-Z]{25}$/)
+});
 
 app
   .get("/", async ctx => {
@@ -52,7 +58,7 @@ app
       });
     }
   })
-  .get("/:id", async ctx => {
+  .get("/:id", validate("param", paramSchema), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
