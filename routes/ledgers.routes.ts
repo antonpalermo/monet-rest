@@ -36,7 +36,7 @@ app
       });
     }
   })
-  .post("/create", async ctx => {
+  .post("/create", validate("json", ledgerSchema.strict()), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
