@@ -117,7 +117,7 @@ app
       }
     }
   )
-  .delete("/:id", async ctx => {
+  .delete("/:id", validate("param", paramSchema), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
