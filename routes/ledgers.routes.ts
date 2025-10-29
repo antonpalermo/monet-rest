@@ -71,9 +71,13 @@ app
     try {
       const result = await db.select().from(ledger).where(eq(ledger.id, id));
 
+      if (!result.length) {
+        return ctx.notFound();
+      }
+
       return ctx.json({
         data: result[0],
-        message: "ledger successfully created"
+        message: "successfully get all ledger details"
       });
     } catch (error) {
       throw new HTTPException(500, {
