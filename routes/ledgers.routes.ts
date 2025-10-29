@@ -4,8 +4,18 @@ import { Hono } from "hono";
 import { ledger } from "../database/schemas/ledger";
 import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
+import z from "zod";
+import { validate } from "../libs/validation";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
+
+const paramSchema = z.object({
+  id: z.string().regex(/^[0-9A-Z]{25}$/)
+});
+
+const ledgerSchema = z.object({
+  name: z.string().min(2).max(100)
+});
 
 app
   .get("/", async ctx => {
@@ -26,7 +36,7 @@ app
       });
     }
   })
-  .post("/create", async ctx => {
+  .post("/create", validate("json", ledgerSchema.strict()), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
@@ -52,7 +62,7 @@ app
       });
     }
   })
-  .get("/:id", async ctx => {
+  .get("/:id", validate("param", paramSchema), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
@@ -61,39 +71,13 @@ app
     try {
       const result = await db.select().from(ledger).where(eq(ledger.id, id));
 
-      return ctx.json({
-        data: result[0],
-        message: "ledger successfully created"
-      });
-    } catch (error) {
-      throw new HTTPException(500, {
-        message: "internal server error",
-        cause: error
-      });
-    }
-  })
-  .patch("/:id", async ctx => {
-    const psql = neon(ctx.env.DATABASE_URL);
-    const db = drizzle(psql);
-
-    const { id } = ctx.req.param();
-
-    const body = await ctx.req.json();
-
-    try {
-      const result = await db
-        .update(ledger)
-        .set({ ...body })
-        .where(eq(ledger.id, id))
-        .returning();
-
       if (!result.length) {
         return ctx.notFound();
       }
 
       return ctx.json({
         data: result[0],
-        message: "successfully updated"
+        message: "successfully get all ledger details"
       });
     } catch (error) {
       throw new HTTPException(500, {
@@ -102,7 +86,42 @@ app
       });
     }
   })
-  .delete("/:id", async ctx => {
+  .patch(
+    "/:id",
+    validate("param", paramSchema),
+    validate("json", ledgerSchema.partial().strict()),
+    async ctx => {
+      const psql = neon(ctx.env.DATABASE_URL);
+      const db = drizzle(psql);
+
+      const { id } = ctx.req.param();
+
+      const body = await ctx.req.json();
+
+      try {
+        const result = await db
+          .update(ledger)
+          .set({ ...body })
+          .where(eq(ledger.id, id))
+          .returning();
+
+        if (!result.length) {
+          return ctx.notFound();
+        }
+
+        return ctx.json({
+          data: result[0],
+          message: "successfully updated"
+        });
+      } catch (error) {
+        throw new HTTPException(500, {
+          message: "internal server error",
+          cause: error
+        });
+      }
+    }
+  )
+  .delete("/:id", validate("param", paramSchema), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
 
