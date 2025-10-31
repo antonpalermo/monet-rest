@@ -98,3 +98,23 @@ app.patch(
     });
   }
 );
+
+app.delete("/:id", validate("param", paramSchema), async ctx => {
+  const db = ctx.get("db");
+  // get the id parameter.
+  const { id } = ctx.req.param();
+
+  const result = await db.delete(entry).where(eq(entry.id, id)).returning();
+
+  if (!result.length) {
+    return ctx.notFound();
+  }
+
+  return ctx.json({
+    data: result[0],
+    success: true,
+    message: `entry successfully removed`
+  });
+});
+
+export default app;
