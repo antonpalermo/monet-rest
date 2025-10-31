@@ -3,11 +3,11 @@ import { logger } from "hono/logger";
 import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
 
+import { neon } from "@neondatabase/serverless";
 import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 
 import ledgerRoutes from "./routes/ledgers.routes";
-import entriesRoutes from "./routes/entries.route";
-import { neon } from "@neondatabase/serverless";
+import entriesRoutes from "./routes/entries";
 
 export type AppEnv = {
   Bindings: CloudflareBindings;
