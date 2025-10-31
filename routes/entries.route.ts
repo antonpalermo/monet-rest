@@ -1,10 +1,33 @@
 import { Hono } from "hono";
 import { desc, gt, sql } from "drizzle-orm";
 
-import { AppEnv } from "../server";
 import { entry } from "../database/schemas/entry";
 
+import { AppEnv } from "../server";
+import { validate } from "../libs/validation";
+import { entrySchema } from "../libs/schemas";
+
 const app = new Hono<AppEnv>();
+
+app.post("/create", validate("json", entrySchema.strict()), async ctx => {
+  const db = ctx.get("db");
+  // get the request body.
+  const body = await ctx.req.json();
+  // create the entry based on the body provided.
+  const createdEntry = await db
+    .insert(entry)
+    .values({ ...body })
+    .returning();
+  // return the newly created entry.
+  return ctx.json(
+    {
+      data: createdEntry[0],
+      success: true,
+      message: "entry successfully created"
+    },
+    201
+  );
+});
 
 app.get("/", async ctx => {
   const db = ctx.get("db");
