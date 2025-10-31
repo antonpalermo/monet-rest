@@ -67,3 +67,34 @@ app.get("/:id", validate("param", paramSchema), async ctx => {
     message: "entry details successfully fetched"
   });
 });
+
+app.patch(
+  "/:id",
+  validate("param", paramSchema),
+  validate("json", entrySchema.partial().strict()),
+  async ctx => {
+    const db = ctx.get("db");
+    // get the id parameter.
+    const { id } = ctx.req.param();
+    // get the request body.
+    const body = await ctx.req.json();
+    // update entry using the id provided
+    const result = await db
+      .update(entry)
+      .set({ ...body })
+      .where(eq(entry.id, id))
+      .returning();
+
+    if (!result.length) {
+      // if no result meaning no entry got updated.
+      return ctx.notFound();
+    }
+
+    // return updated entry
+    return ctx.json({
+      data: result[0],
+      success: true,
+      message: "entry successfully updated"
+    });
+  }
+);
