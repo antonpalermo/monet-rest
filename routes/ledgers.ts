@@ -4,18 +4,11 @@ import { Hono } from "hono";
 import { ledger } from "../database/schemas/ledger";
 import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
-import z from "zod";
+
 import { validate } from "../libs/validation";
+import { paramSchema, ledgerSchema } from "../libs/schemas";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
-
-const paramSchema = z.object({
-  id: z.string().regex(/^[0-9A-Z]{25}$/)
-});
-
-const ledgerSchema = z.object({
-  name: z.string().min(2).max(100)
-});
 
 app
   .get("/", async ctx => {
