@@ -1,26 +1,15 @@
-import z from "zod";
-
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
 import { neon } from "@neondatabase/serverless";
-import { desc, eq, gt, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
+import { desc, eq, gt, sql } from "drizzle-orm";
 
 import { entry } from "../database/schemas/entry";
 import { validate } from "../libs/validation";
+import { paramSchema, entrySchema } from "../libs/schemas";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
-
-const paramSchema = z.object({
-  id: z.string().regex(/^[0-9A-Z]{25}$/)
-});
-
-const entrySchema = z.object({
-  ledgerId: z.string().regex(/^[0-9A-Z]{25}$/),
-  description: z.string().min(3).max(250),
-  amount: z.number().positive()
-});
 
 app
   // get all entries
