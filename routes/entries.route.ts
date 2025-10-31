@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import { desc, gt, sql } from "drizzle-orm";
+import { desc, eq, gt, sql } from "drizzle-orm";
 
 import { entry } from "../database/schemas/entry";
 
 import { AppEnv } from "../server";
 import { validate } from "../libs/validation";
-import { entrySchema } from "../libs/schemas";
+import { entrySchema, paramSchema } from "../libs/schemas";
 
 const app = new Hono<AppEnv>();
 
@@ -44,5 +44,26 @@ app.get("/", async ctx => {
     data: entries,
     success: true,
     message: "entries successfully fetched"
+  });
+});
+
+app.get("/:id", validate("param", paramSchema), async ctx => {
+  const db = ctx.get("db");
+  // get the id parameter
+  const { id } = ctx.req.param();
+  // query if the provided id exsist.
+  const result = await db.select().from(entry).where(eq(entry.id, id));
+
+  if (!result.length) {
+    // return not found if no corresponding entries
+    // found.
+    return ctx.notFound();
+  }
+
+  // return corresponding entry if exist.
+  return ctx.json({
+    data: result[0],
+    success: true,
+    message: "entry details successfully fetched"
   });
 });
