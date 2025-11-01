@@ -10,7 +10,7 @@ on:
       - reopened
 
 jobs:
-  linter:
+  vitest:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: ${{secrets.DATABASE_URL}}
