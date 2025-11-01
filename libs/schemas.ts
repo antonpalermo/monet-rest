@@ -7,3 +7,7 @@ export const entrySchema = z.object({
   description: z.string().min(3).max(250),
   amount: z.number().positive()
 });
+
+export const ledgerSchema = z.object({
+  name: z.string().min(2).max(100)
+});
