@@ -11,27 +11,23 @@ import { AppEnv } from "../server";
 import { validate } from "../libs/validation";
 import { paramSchema, ledgerSchema } from "../libs/schemas";
 
-const app = new Hono<{ Bindings: CloudflareBindings }>();
+const app = new Hono<AppEnv>();
+
+app.get("/", async ctx => {
+  const db = ctx.get("db");
+
+  // TODO: only return ledgers that are belong to a user and
+  //       selected ledger
+  const ledgers = await db.select().from(ledger);
+
+  return ctx.json({
+    data: ledgers,
+    success: true,
+    message: "ledgers successfully fetched"
+  });
+});
 
 app
-  .get("/", async ctx => {
-    const psql = neon(ctx.env.DATABASE_URL);
-    const db = drizzle(psql);
-
-    try {
-      // TODO: only return ledgers that are belong to a user.
-      const result = await db.select().from(ledger);
-      return ctx.json({
-        data: result,
-        message: "successfully get all legers"
-      });
-    } catch (error) {
-      throw new HTTPException(500, {
-        message: "internal server error",
-        cause: error
-      });
-    }
-  })
   .post("/create", validate("json", ledgerSchema.strict()), async ctx => {
     const psql = neon(ctx.env.DATABASE_URL);
     const db = drizzle(psql);
