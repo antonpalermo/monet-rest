@@ -102,7 +102,8 @@ app.delete("/:id", validate("param", paramSchema), async ctx => {
 
   return ctx.json({
     data: result[0],
-    message: `${id} successfully removed`
+    success: true,
+    message: "ledger successfully removed"
   });
 });
 

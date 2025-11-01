@@ -113,7 +113,7 @@ app.delete("/:id", validate("param", paramSchema), async ctx => {
   return ctx.json({
     data: result[0],
     success: true,
-    message: `entry successfully removed`
+    message: "entry successfully removed"
   });
 });
 
