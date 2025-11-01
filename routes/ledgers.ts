@@ -59,72 +59,63 @@ app.get("/:id", validate("param", paramSchema), async ctx => {
 
   return ctx.json({
     data: result[0],
+    success: true,
     message: "ledger details successfully fetched"
   });
 });
 
-app
-  .patch(
-    "/:id",
-    validate("param", paramSchema),
-    validate("json", ledgerSchema.partial().strict()),
-    async ctx => {
-      const psql = neon(ctx.env.DATABASE_URL);
-      const db = drizzle(psql);
-
-      const { id } = ctx.req.param();
-
-      const body = await ctx.req.json();
-
-      try {
-        const result = await db
-          .update(ledger)
-          .set({ ...body })
-          .where(eq(ledger.id, id))
-          .returning();
-
-        if (!result.length) {
-          return ctx.notFound();
-        }
-
-        return ctx.json({
-          data: result[0],
-          message: "successfully updated"
-        });
-      } catch (error) {
-        throw new HTTPException(500, {
-          message: "internal server error",
-          cause: error
-        });
-      }
-    }
-  )
-  .delete("/:id", validate("param", paramSchema), async ctx => {
-    const psql = neon(ctx.env.DATABASE_URL);
-    const db = drizzle(psql);
+app.patch(
+  "/:id",
+  validate("param", paramSchema),
+  validate("json", ledgerSchema.partial().strict()),
+  async ctx => {
+    const db = ctx.get("db");
 
     const { id } = ctx.req.param();
 
-    try {
-      const result = await db
-        .delete(ledger)
-        .where(eq(ledger.id, id))
-        .returning();
+    const body = await ctx.req.json();
 
-      if (!result.length) {
-        return ctx.notFound();
-      }
+    const result = await db
+      .update(ledger)
+      .set({ ...body })
+      .where(eq(ledger.id, id))
+      .returning();
 
-      return ctx.json({
-        data: result[0],
-        message: `${id} successfully removed`
-      });
-    } catch (error) {
-      throw new HTTPException(500, {
-        message: "internal server error",
-        cause: error
-      });
+    if (!result.length) {
+      return ctx.notFound();
     }
-  });
+
+    return ctx.json({
+      data: result[0],
+      success: true,
+      message: "ledger successfully updated"
+    });
+  }
+);
+
+app.delete("/:id", validate("param", paramSchema), async ctx => {
+  const psql = neon(ctx.env.DATABASE_URL);
+  const db = drizzle(psql);
+
+  const { id } = ctx.req.param();
+
+  try {
+    const result = await db.delete(ledger).where(eq(ledger.id, id)).returning();
+
+    if (!result.length) {
+      return ctx.notFound();
+    }
+
+    return ctx.json({
+      data: result[0],
+      message: `${id} successfully removed`
+    });
+  } catch (error) {
+    throw new HTTPException(500, {
+      message: "internal server error",
+      cause: error
+    });
+  }
+});
 
 export default app;
