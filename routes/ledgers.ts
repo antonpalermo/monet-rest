@@ -47,31 +47,23 @@ app.get("/", async ctx => {
   });
 });
 
+app.get("/:id", validate("param", paramSchema), async ctx => {
+  const db = ctx.get("db");
+  const { id } = ctx.req.param();
+
+  const result = await db.select().from(ledger).where(eq(ledger.id, id));
+
+  if (!result.length) {
+    return ctx.notFound();
+  }
+
+  return ctx.json({
+    data: result[0],
+    message: "ledger details successfully fetched"
+  });
+});
+
 app
-  .get("/:id", validate("param", paramSchema), async ctx => {
-    const psql = neon(ctx.env.DATABASE_URL);
-    const db = drizzle(psql);
-
-    const { id } = ctx.req.param();
-
-    try {
-      const result = await db.select().from(ledger).where(eq(ledger.id, id));
-
-      if (!result.length) {
-        return ctx.notFound();
-      }
-
-      return ctx.json({
-        data: result[0],
-        message: "successfully get all ledger details"
-      });
-    } catch (error) {
-      throw new HTTPException(500, {
-        message: "internal server error",
-        cause: error
-      });
-    }
-  })
   .patch(
     "/:id",
     validate("param", paramSchema),
