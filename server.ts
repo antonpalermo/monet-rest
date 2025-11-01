@@ -18,6 +18,10 @@ export type AppEnv = {
 
 const app = new Hono<AppEnv>().basePath("/api");
 
+app.get("/", c => {
+  return c.text("Hello Hono!");
+});
+
 app.use(logger());
 app.use(secureHeaders());
 
@@ -32,10 +36,6 @@ app.use(async (ctx, next) => {
 
 app.route("/ledgers", ledgerRoutes);
 app.route("/entries", entriesRoutes);
-
-app.get("/", c => {
-  return c.text("Hello Hono!");
-});
 
 app.onError((err, ctx) => {
   console.error(err);
