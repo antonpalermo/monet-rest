@@ -11,5 +11,10 @@ export default defineConfig([
     languageOptions: { globals: globals.node }
   },
   tseslint.configs.recommended,
-  globalIgnores(["**/node_modules/", ".git/", ".wrangler/"])
+  globalIgnores([
+    "**/node_modules/",
+    ".git/",
+    ".wrangler/",
+    "worker-configuration.d.ts"
+  ])
 ]);
