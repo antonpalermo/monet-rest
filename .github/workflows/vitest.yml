@@ -1,0 +1,26 @@
+name: vitest checks
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout codebase
+        uses: actions/checkout@v4
+
+      - name: setup bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: install project deps
+        run: bun install --frozen-lockfile
+
+      - name: running vitest
+        run: bun run test
