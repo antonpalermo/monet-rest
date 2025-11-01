@@ -1,8 +1,4 @@
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
-
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
 import { eq } from "drizzle-orm";
 
 import { ledger } from "../database/schemas/ledger";
@@ -94,28 +90,20 @@ app.patch(
 );
 
 app.delete("/:id", validate("param", paramSchema), async ctx => {
-  const psql = neon(ctx.env.DATABASE_URL);
-  const db = drizzle(psql);
+  const db = ctx.get("db");
 
   const { id } = ctx.req.param();
 
-  try {
-    const result = await db.delete(ledger).where(eq(ledger.id, id)).returning();
+  const result = await db.delete(ledger).where(eq(ledger.id, id)).returning();
 
-    if (!result.length) {
-      return ctx.notFound();
-    }
-
-    return ctx.json({
-      data: result[0],
-      message: `${id} successfully removed`
-    });
-  } catch (error) {
-    throw new HTTPException(500, {
-      message: "internal server error",
-      cause: error
-    });
+  if (!result.length) {
+    return ctx.notFound();
   }
+
+  return ctx.json({
+    data: result[0],
+    message: `${id} successfully removed`
+  });
 });
 
 export default app;
