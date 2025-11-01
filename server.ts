@@ -6,7 +6,7 @@ import { secureHeaders } from "hono/secure-headers";
 import { neon } from "@neondatabase/serverless";
 import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 
-import ledgerRoutes from "./routes/ledgers.routes";
+import ledgerRoutes from "./routes/ledgers";
 import entriesRoutes from "./routes/entries";
 
 export type AppEnv = {
