@@ -5,6 +5,7 @@
     "dev": "wrangler dev",
     "lint": "eslint .",
     "lint:fix": "prettier . --write",
+    "test": "vetest --typecheck",
     "deploy": "wrangler deploy --minify --env production",
     "deploy:dev": "wrangler deploy --minify --env development",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
@@ -21,6 +22,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.10.3",
     "@eslint/js": "^9.37.0",
     "drizzle-kit": "^0.31.5",
     "eslint": "^9.37.0",
@@ -28,6 +30,7 @@
     "jiti": "^2.6.1",
     "prettier": "^3.6.2",
     "typescript-eslint": "^8.46.1",
+    "vitest": "~3.2.0",
     "wrangler": "^4.4.0"
   }
 }
