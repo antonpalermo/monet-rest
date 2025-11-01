@@ -23,4 +23,6 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: running vitest
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
         run: bun run test
