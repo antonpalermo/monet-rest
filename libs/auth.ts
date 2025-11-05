@@ -13,6 +13,12 @@ export const auth = (
     appName: "Monet",
     database: drizzleAdapter(db, { provider: "pg" }),
     baseURL: env.BETTER_AUTH_URL,
-    secret: env.BETTER_AUTH_SECRET
+    secret: env.BETTER_AUTH_SECRET,
+    socialProviders: {
+      google: {
+        clientId: env.GOOGLE_OAUTH_CLIENT_ID,
+        clientSecret: env.GOOGLE_OAUTH_CLIENT_SECRET
+      }
+    }
   });
 };
