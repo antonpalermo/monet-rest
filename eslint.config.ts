@@ -14,6 +14,7 @@ export default defineConfig([
   globalIgnores([
     "**/node_modules/",
     ".git/",
+    "dist",
     ".wrangler/",
     "worker-configuration.d.ts"
   ])
