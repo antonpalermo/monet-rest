@@ -1,8 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "monet-rest",
-  "main": "server.ts",
-  "compatibility_date": "2022-10-31",
+  "name": "monet",
+  "main": "workers/server.ts",
+  "compatibility_date": "2025-11-05",
   "env": {
     "production": {},
     "development": {}
