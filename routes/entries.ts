@@ -3,7 +3,7 @@ import { desc, eq, gt, sql } from "drizzle-orm";
 
 import { entry } from "../database/schemas/entry";
 
-import { AppEnv } from "../workers/server";
+import type { AppEnv } from "../workers/server";
 import { validate } from "../libs/validation";
 import { entrySchema, paramSchema } from "../libs/schemas";
 
