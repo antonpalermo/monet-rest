@@ -24,5 +24,8 @@ jobs:
       - name: install project deps
         run: bun install --frozen-lockfile
 
+      - name: building client
+        run: bun run build
+
       - name: running vitest
         run: bun run test
