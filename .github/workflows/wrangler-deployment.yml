@@ -30,6 +30,6 @@ jobs:
           secrets: |
             DATABASE_URL
           packageManager: bun
-          wranglerVersion: 4.43.0
+          wranglerVersion: 4.46.0
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
