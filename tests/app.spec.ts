@@ -1,5 +1,5 @@
 import { env } from "cloudflare:test";
-import app from "../server";
+import app from "../workers/server";
 
 describe("app specs", () => {
   it("api should return 200 status", async () => {
