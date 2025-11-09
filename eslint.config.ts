@@ -13,9 +13,11 @@ export default defineConfig([
   tseslint.configs.recommended,
   globalIgnores([
     "**/node_modules/",
+    "/client/routeTree.gen.ts",
     ".git/",
-    "dist",
+    ".tanstack/",
     ".wrangler/",
+    "dist",
     "worker-configuration.d.ts"
   ])
 ]);
