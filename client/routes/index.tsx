@@ -1,6 +1,11 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-export default function App() {
+export const Route = createFileRoute("/")({
+  component: App
+});
+
+function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {

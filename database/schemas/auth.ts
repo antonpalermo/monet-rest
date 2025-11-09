@@ -10,7 +10,7 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
+    .notNull()
 });
 
 export const session = pgTable("session", {
@@ -25,7 +25,7 @@ export const session = pgTable("session", {
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" })
 });
 
 export const account = pgTable("account", {
@@ -45,7 +45,7 @@ export const account = pgTable("account", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
+    .notNull()
 });
 
 export const verification = pgTable("verification", {
@@ -57,5 +57,5 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
+    .notNull()
 });
