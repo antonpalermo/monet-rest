@@ -8,6 +8,7 @@ import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 
 import ledgerRoutes from "../routes/ledgers";
 import entriesRoutes from "../routes/entries";
+import { auth } from "../libs/auth";
 
 export type AppEnv = {
   Bindings: CloudflareBindings;
@@ -33,6 +34,8 @@ app.use(async (ctx, next) => {
   // proceed with the next step.
   await next();
 });
+
+app.on(["POST", "GET"], "/auth/*", c => auth(c.env).handler(c.req.raw));
 
 app.route("/ledgers", ledgerRoutes);
 app.route("/entries", entriesRoutes);
