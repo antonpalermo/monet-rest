@@ -16,15 +16,20 @@ jobs:
       - name: setup bun environment
         uses: oven-sh/setup-bun@v2
 
+      - name: install project deps
+        run: bun install --frozen-lockfile
+
+      - name: building client
+        run: bun run build
+
       - name: deploying workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{secrets.CLOUDFLARE_API_TOKEN}}
           accountId: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
-          environment: production
           secrets: |
             DATABASE_URL
           packageManager: bun
-          wranglerVersion: 4.43.0
+          wranglerVersion: 4.46.0
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
