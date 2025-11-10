@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { desc, eq, gt, sql } from "drizzle-orm";
 
-import { entry } from "../database/schemas/entry";
+import { entry } from "../../database/schemas/entry";
 
-import type { AppEnv } from "../workers/server";
+import type { AppEnv } from "../server";
 import { validate } from "../libs/validation";
 import { entrySchema, paramSchema } from "../libs/schemas";
 

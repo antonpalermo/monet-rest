@@ -6,9 +6,9 @@ import { secureHeaders } from "hono/secure-headers";
 import { neon } from "@neondatabase/serverless";
 import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 
-import ledgerRoutes from "../routes/ledgers";
-import entriesRoutes from "../routes/entries";
-import { auth } from "../libs/auth";
+import ledgerRoutes from "./routes/ledgers";
+import entriesRoutes from "./routes/entries";
+import { auth } from "./libs/auth";
 
 export type AppEnv = {
   Bindings: CloudflareBindings;
