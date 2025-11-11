@@ -3,3 +3,4 @@ worker-configuration.d.ts
 .tanstack
 .wrangler
 routeTree.gen.ts
+migrations
