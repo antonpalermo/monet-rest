@@ -3,7 +3,7 @@ import { pgTable, text, timestamp, index } from "drizzle-orm/pg-core";
 import { user } from "./user";
 
 export const session = pgTable(
-  "session",
+  "sessions",
   {
     id: text("id").primaryKey(),
     expiresAt: timestamp("expires_at").notNull(),
