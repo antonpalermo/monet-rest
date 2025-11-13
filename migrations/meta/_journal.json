@@ -15,6 +15,13 @@
       "when": 1762269030853,
       "tag": "0001_far_chamber",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1763027779237,
+      "tag": "0002_handy_vampiro",
+      "breakpoints": true
     }
   ]
 }
