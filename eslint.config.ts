@@ -18,6 +18,7 @@ export default defineConfig([
     ".tanstack/",
     ".wrangler/",
     "dist",
+    "migrations",
     "worker-configuration.d.ts"
   ])
 ]);

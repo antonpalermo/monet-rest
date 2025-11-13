@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 
 import { ledger } from "../database/schemas/ledger";
 
-import type { AppEnv } from "../workers/server";
+import type { AppEnv } from "../server";
 import { validate } from "../libs/validation";
 import { paramSchema, ledgerSchema } from "../libs/schemas";
 

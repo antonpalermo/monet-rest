@@ -1,7 +1,7 @@
+import { relations } from "drizzle-orm";
 import { index, numeric, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 import { nanoid } from "../../libs/nanoid";
-import { relations } from "drizzle-orm";
 import { ledger } from "./ledger";
 
 export const entry = pgTable(
