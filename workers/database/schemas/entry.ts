@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import { index, numeric, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 import { nanoid } from "../../libs/nanoid";
@@ -12,7 +11,9 @@ export const entry = pgTable(
       .primaryKey()
       .$defaultFn(() => nanoid()),
     description: text().notNull(),
-    ledgerId: text(),
+    ledgerId: text()
+      .notNull()
+      .references(() => ledger.id),
     amount: numeric({ mode: "number", precision: 100, scale: 2 }).notNull(),
     dateCreated: timestamp().defaultNow().notNull(),
     dateUpdated: timestamp()
@@ -21,10 +22,3 @@ export const entry = pgTable(
   },
   table => [index("entries_id_index").on(table.id)]
 );
-
-export const entryRelations = relations(entry, ({ one }) => ({
-  ledger: one(ledger, {
-    fields: [entry.ledgerId],
-    references: [ledger.id]
-  })
-}));
