@@ -3,6 +3,8 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/neon-http";
 
+import { account, session, user, verification } from "../database/schemas";
+
 export const auth = (
   env: CloudflareBindings
 ): ReturnType<typeof betterAuth> => {
@@ -11,7 +13,15 @@ export const auth = (
 
   return betterAuth({
     appName: "Monet",
-    database: drizzleAdapter(db, { provider: "pg" }),
+    database: drizzleAdapter(db, {
+      provider: "pg",
+      schema: {
+        account,
+        user,
+        session,
+        verification
+      }
+    }),
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
     socialProviders: {

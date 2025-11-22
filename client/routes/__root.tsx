@@ -6,6 +6,7 @@ function RootLayout() {
       <div>
         <Link to="/">Home</Link>
         <Link to="/test">Test</Link>
+        <Link to="/signin">Sign In</Link>
       </div>
       <hr />
       <Outlet />
