@@ -29,7 +29,15 @@ jobs:
           accountId: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
           secrets: |
             DATABASE_URL
+            BETTER_AUTH_SECRET
+            BETTER_AUTH_URL
+            GOOGLE_OAUTH_CLIENT_ID
+            GOOGLE_OAUTH_CLIENT_SECRET
           packageManager: bun
           wranglerVersion: 4.46.0
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
+          BETTER_AUTH_SECRET: ${{secrets.BETTER_AUTH_SECRET}}
+          BETTER_AUTH_URL: ${{secrets.BETTER_AUTH_URL}}
+          GOOGLE_OAUTH_CLIENT_ID: ${{secrets.GOOGLE_OAUTH_CLIENT_ID}}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{secrets.GOOGLE_OAUTH_CLIENT_SECRET}}
