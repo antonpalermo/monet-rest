@@ -34,7 +34,7 @@ jobs:
             GOOGLE_OAUTH_CLIENT_ID
             GOOGLE_OAUTH_CLIENT_SECRET
           packageManager: bun
-          wranglerVersion: 4.46.0
+          wranglerVersion: 4.50.0
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
           BETTER_AUTH_SECRET: ${{secrets.BETTER_AUTH_SECRET}}
