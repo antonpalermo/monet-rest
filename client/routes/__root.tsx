@@ -1,4 +1,9 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createRootRouteWithContext
+} from "@tanstack/react-router";
+import type { Session } from "../components/app";
 
 function RootLayout() {
   return (
@@ -14,4 +19,10 @@ function RootLayout() {
   );
 }
 
-export const Route = createRootRoute({ component: RootLayout });
+type RouteContext = {
+  session: Session | undefined;
+};
+
+export const Route = createRootRouteWithContext<RouteContext>()({
+  component: RootLayout
+});
