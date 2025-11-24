@@ -1,14 +1,12 @@
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import { routeTree } from "../routeTree.gen";
-import { createAuthClient } from "better-auth/react";
-
-export type Session = ReturnType<typeof useSession>;
+import { useSession } from "../hooks/use-session";
 
 const router = createRouter({
   routeTree,
   context: {
-    session: undefined
+    isAuthenticated: false
   }
 });
 
@@ -18,10 +16,8 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const { useSession } = createAuthClient();
-
 export function App() {
-  const session = useSession();
+  const { isAuthenticated } = useSession();
 
-  return <RouterProvider router={router} context={{ session }} />;
+  return <RouterProvider router={router} context={{ isAuthenticated }} />;
 }
