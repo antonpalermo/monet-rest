@@ -1,6 +1,5 @@
 import { createContext, type ReactNode } from "react";
-import { createAuthClient } from "better-auth/react";
-import { redirect } from "@tanstack/react-router";
+import { createAuthClient, type SuccessContext } from "better-auth/react";
 
 const authClient = createAuthClient();
 
@@ -11,7 +10,9 @@ export type Session = {
   user: AuthData["user"] | undefined;
   isPending: boolean;
   socialSignIn: (provider: "google") => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: (
+    onSuccess: (successContext: SuccessContext) => Promise<void>
+  ) => Promise<void>;
 };
 
 export const SessionContext = createContext<Session | undefined>(undefined);
@@ -26,12 +27,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  async function signOut() {
+  async function signOut(
+    onSuccess: (successContext: SuccessContext) => Promise<void>
+  ) {
     await authClient.signOut({
       fetchOptions: {
-        onSuccess: () => {
-          throw redirect({ to: "/signin" });
-        }
+        onSuccess
       }
     });
   }

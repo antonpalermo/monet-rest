@@ -1,7 +1,8 @@
 import {
   Link,
   Outlet,
-  createRootRouteWithContext
+  createRootRouteWithContext,
+  redirect
 } from "@tanstack/react-router";
 import { useSession } from "../hooks/use-session";
 
@@ -14,7 +15,15 @@ function RootLayout() {
         <Link to="/">Home</Link>
         <Link to="/test">Test</Link>
         <Link to="/signin">Sign In</Link>
-        <button onClick={async () => signOut()}>Sign Out</button>
+        <button
+          onClick={async () =>
+            signOut(() => {
+              throw redirect({ to: "/signin" });
+            })
+          }
+        >
+          Sign Out
+        </button>
       </div>
       <hr />
       <Outlet />
