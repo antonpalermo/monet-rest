@@ -2,12 +2,13 @@ import {
   Link,
   Outlet,
   createRootRouteWithContext,
-  redirect
+  useRouter
 } from "@tanstack/react-router";
 import { useSession } from "../hooks/use-session";
 
 function RootLayout() {
   const { signOut } = useSession();
+  const { navigate } = useRouter();
 
   return (
     <div>
@@ -17,8 +18,8 @@ function RootLayout() {
         <Link to="/signin">Sign In</Link>
         <button
           onClick={async () =>
-            signOut(() => {
-              throw redirect({ to: "/signin" });
+            signOut(async () => {
+              navigate({ to: "/signin" });
             })
           }
         >
