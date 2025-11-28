@@ -27,6 +27,11 @@
     "baseUrl": ".",
     "paths": {
       "@client/*": ["./client/*"],
+      "@components/*": ["./client/components/*"],
+      "@lib/*": ["./client/lib/*"],
+      "@hooks/*": ["./client/hooks/*"],
+      "@providers/*": ["./client/providers/*"],
+      "@ui/*": ["./client/components/ui/*"],
       "@workers/*": ["./workers/*"]
     }
   },

@@ -4,6 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "@client/*": ["./client/*"],
+      "@components/*": ["./client/components/*"],
+      "@lib/*": ["./client/lib/*"],
+      "@hooks/*": ["./client/hooks/*"],
+      "@ui/*": ["./client/components/ui/*"],
       "@workers/*": ["./workers/*"]
     }
   },
