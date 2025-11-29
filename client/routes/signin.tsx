@@ -1,6 +1,8 @@
 import { createAuthClient } from "better-auth/react";
 import { createFileRoute } from "@tanstack/react-router";
 
+import { Button } from "@ui/button";
+
 export const Route = createFileRoute("/signin")({
   component: RouteComponent
 });
@@ -20,9 +22,9 @@ function RouteComponent() {
 
   return (
     <div>
-      <button onClick={() => socialSignIn({ provider: "google" })}>
+      <Button onClick={() => socialSignIn({ provider: "google" })}>
         Sign In with Google
-      </button>
+      </Button>
     </div>
   );
 }
