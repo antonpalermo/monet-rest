@@ -43,6 +43,13 @@
       "when": 1764474693871,
       "tag": "0005_magenta_kronos",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1764515368141,
+      "tag": "0006_kind_tattoo",
+      "breakpoints": true
     }
   ]
 }
