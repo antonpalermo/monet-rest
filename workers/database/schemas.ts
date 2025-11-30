@@ -73,9 +73,27 @@ export const verification = pgTable(
   table => [index("verification_identifier_idx").on(table.identifier)]
 );
 
+export const ledger = pgTable(
+  "ledger",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull()
+  },
+  table => [index("ledger_userId_idx").on(table.userId)]
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
-  accounts: many(account)
+  accounts: many(account),
+  ledgers: many(ledger)
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -88,6 +106,13 @@ export const sessionRelations = relations(session, ({ one }) => ({
 export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, {
     fields: [account.userId],
+    references: [user.id]
+  })
+}));
+
+export const ledgerRelations = relations(ledger, ({ one }) => ({
+  user: one(user, {
+    fields: [ledger.userId],
     references: [user.id]
   })
 }));
