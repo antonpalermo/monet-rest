@@ -1,0 +1,1 @@
+ALTER TABLE "account" ADD CONSTRAINT "account_id_unique" UNIQUE("id");
