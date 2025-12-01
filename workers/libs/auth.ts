@@ -4,6 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/neon-http";
 
 import { account, session, user, verification } from "../database/schemas";
+import { nanoid } from "../libs/nanoid";
 
 export const auth = (
   env: CloudflareBindings
@@ -22,6 +23,13 @@ export const auth = (
         verification
       }
     }),
+    advanced: {
+      database: {
+        generateId: () => {
+          return nanoid();
+        }
+      }
+    },
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
     socialProviders: {
