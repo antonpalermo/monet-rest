@@ -5,6 +5,8 @@ import { drizzle } from "drizzle-orm/neon-http";
 
 import { account, session, user, verification } from "../database/schemas";
 
+export type Session = ReturnType<typeof betterAuth>["$Infer"]["Session"];
+
 export const auth = (
   env: CloudflareBindings
 ): ReturnType<typeof betterAuth> => {
