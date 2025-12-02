@@ -8,12 +8,14 @@ import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 
 import ledgerRoutes from "./routes/ledgers";
 import entriesRoutes from "./routes/entries";
-import { auth } from "./libs/auth";
+import { auth, type Session } from "./libs/auth";
 
 export type AppEnv = {
   Bindings: CloudflareBindings;
   Variables: {
     db: NeonHttpDatabase;
+    user: Session["user"] | null;
+    session: Session["session"] | null;
   };
 };
 
@@ -25,6 +27,23 @@ app.get("/", c => {
 
 app.use(logger());
 app.use(secureHeaders());
+
+app.use(async (ctx, next) => {
+  const session = await auth(ctx.env).api.getSession({
+    headers: ctx.req.raw.headers
+  });
+
+  if (!session) {
+    ctx.set("user", null);
+    ctx.set("session", null);
+    await next();
+    return;
+  }
+
+  ctx.set("user", session.user);
+  ctx.set("session", session.session);
+  await next();
+});
 
 app.use(async (ctx, next) => {
   const neonClient = neon(ctx.env.DATABASE_URL);
