@@ -38,10 +38,7 @@ export const session = pgTable(
 export const account = pgTable(
   "account",
   {
-    id: text("id")
-      .unique()
-      .primaryKey()
-      .$defaultFn(() => nanoid()),
+    id: text("id").primaryKey(),
     accountId: text("account_id").notNull(),
     providerId: text("provider_id").notNull(),
     userId: text("user_id")
@@ -81,7 +78,10 @@ export const verification = pgTable(
 export const ledger = pgTable(
   "ledger",
   {
-    id: text("id").primaryKey(),
+    id: text("id")
+      .unique()
+      .primaryKey()
+      .$default(() => nanoid()),
     name: text("name").notNull(),
     userId: text("user_id")
       .notNull()

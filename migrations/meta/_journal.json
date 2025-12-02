@@ -50,6 +50,13 @@
       "when": 1764515368141,
       "tag": "0006_kind_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1764601090278,
+      "tag": "0007_panoramic_sway",
+      "breakpoints": true
     }
   ]
 }
