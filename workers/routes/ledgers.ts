@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { eq } from "drizzle-orm";
 
-import { ledger } from "../database/schemas/ledger";
+import { ledger } from "../database/schemas";
 
 import type { AppEnv } from "../server";
 import { validate } from "../libs/validation";
@@ -11,12 +11,21 @@ const app = new Hono<AppEnv>();
 
 app.post("/create", validate("json", ledgerSchema.strict()), async ctx => {
   const db = ctx.get("db");
+  const user = ctx.get("user");
 
   const body = await ctx.req.json();
 
+  if (!user) {
+    return ctx.json({
+      data: undefined,
+      success: false,
+      message: "unauthorized"
+    });
+  }
+
   const createdLedger = await db
     .insert(ledger)
-    .values({ name: body.name })
+    .values({ name: body.name, userId: user.id })
     .returning();
 
   return ctx.json(
