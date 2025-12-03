@@ -1,7 +1,6 @@
 import { index, numeric, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 import { nanoid } from "../../libs/nanoid";
-import { ledger } from "./ledger";
 
 export const entry = pgTable(
   "entries",
@@ -11,9 +10,7 @@ export const entry = pgTable(
       .primaryKey()
       .$defaultFn(() => nanoid()),
     description: text().notNull(),
-    ledgerId: text()
-      .notNull()
-      .references(() => ledger.id),
+    ledgerId: text().notNull(),
     amount: numeric({ mode: "number", precision: 100, scale: 2 }).notNull(),
     dateCreated: timestamp().defaultNow().notNull(),
     dateUpdated: timestamp()
