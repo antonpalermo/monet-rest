@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { createContext, useState, type ReactNode } from "react";
 
-import { formSchema } from "@components/ledger/create-form";
+import { ledgerSchema } from "@workers/libs/schemas";
 import type z from "zod";
 
-export type Ledger = z.infer<typeof formSchema>;
+export type Ledger = z.infer<typeof ledgerSchema>;
 
 type LedgerContextProps = {
   open: boolean;

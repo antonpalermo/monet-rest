@@ -9,5 +9,8 @@ export const entrySchema = z.object({
 });
 
 export const ledgerSchema = z.object({
-  name: z.string().min(2).max(100)
+  name: z
+    .string()
+    .min(5, "Ledger name must be at least 5 characters long")
+    .max(50, "Ledger name must be at most 50 characters long")
 });

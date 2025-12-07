@@ -1,16 +1,10 @@
-import * as z from "zod";
 import { useForm } from "@tanstack/react-form";
 
 import { Input } from "@ui/input";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@ui/field";
 import { useLedger } from "@hooks/use-ledger";
 
-export const formSchema = z.object({
-  name: z
-    .string()
-    .min(5, "Ledger name must be at least 5 characters long")
-    .max(50, "Ledger name must be at most 50 characters long")
-});
+import { ledgerSchema } from "@workers/libs/schemas";
 
 export function CreateLedgerForm() {
   const { createLedger } = useLedger();
@@ -20,7 +14,7 @@ export function CreateLedgerForm() {
       name: ""
     },
     validators: {
-      onSubmit: formSchema
+      onSubmit: ledgerSchema
     },
     onSubmit: async ({ value }) => {
       await createLedger(value);
