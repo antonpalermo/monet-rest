@@ -6,6 +6,7 @@ import "@client/globals.css";
 import "@fontsource-variable/inter";
 
 import { App } from "@components/app";
+import { LedgerProvider } from "@providers/ledger";
 import { SessionProvider } from "@providers/session";
 
 const client = new QueryClient();
@@ -14,7 +15,9 @@ createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <QueryClientProvider client={client}>
       <SessionProvider>
-        <App />
+        <LedgerProvider>
+          <App />
+        </LedgerProvider>
       </SessionProvider>
     </QueryClientProvider>
   </StrictMode>

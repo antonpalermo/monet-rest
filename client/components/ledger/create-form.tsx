@@ -3,8 +3,9 @@ import { useForm } from "@tanstack/react-form";
 
 import { Input } from "@ui/input";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@ui/field";
+import { useLedger } from "@hooks/use-ledger";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z
     .string()
     .min(5, "Ledger name must be at least 5 characters long")
@@ -12,6 +13,8 @@ const formSchema = z.object({
 });
 
 export function CreateLedgerForm() {
+  const { createLedger } = useLedger();
+
   const form = useForm({
     defaultValues: {
       name: ""
@@ -20,7 +23,7 @@ export function CreateLedgerForm() {
       onSubmit: formSchema
     },
     onSubmit: async ({ value }) => {
-      console.log(value.name);
+      await createLedger(value);
     }
   });
 
