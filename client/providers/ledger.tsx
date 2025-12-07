@@ -1,8 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { createContext, useState, type ReactNode } from "react";
+import { useMutation } from "@tanstack/react-query";
+
+import type z from "zod";
 
 import { ledgerSchema } from "@workers/libs/schemas";
-import type z from "zod";
 
 export type Ledger = z.infer<typeof ledgerSchema>;
 
@@ -21,8 +23,9 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
 
   const createMutation = useMutation({
     mutationFn: createMutationFn,
-    onSuccess: () => {
+    onSuccess: data => {
       setOpen(false);
+      toast.success(data.message);
     }
   });
 
