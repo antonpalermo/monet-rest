@@ -40,10 +40,22 @@ app.post("/create", validate("json", ledgerSchema.strict()), async ctx => {
 
 app.get("/", async ctx => {
   const db = ctx.get("db");
+  const user = ctx.get("user");
+
+  if (!user) {
+    return ctx.json({
+      data: undefined,
+      success: false,
+      message: "unauthorized"
+    });
+  }
 
   // TODO: only return ledgers that are belong to a user and
   //       selected ledger
-  const ledgers = await db.select().from(ledger);
+  const ledgers = await db
+    .select()
+    .from(ledger)
+    .where(eq(ledger.userId, user.id));
 
   return ctx.json({
     data: ledgers,
