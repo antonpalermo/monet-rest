@@ -10,7 +10,11 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@ui/popover";
 import { ChevronsUpDown } from "lucide-react";
 
+import { useLedger } from "@hooks/use-ledger";
+
 export function LedgerSwitch() {
+  const { ledgers } = useLedger();
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -29,7 +33,9 @@ export function LedgerSwitch() {
           <CommandList>
             <CommandEmpty>Ledger not found</CommandEmpty>
             <CommandGroup>
-              <CommandItem>Sample</CommandItem>
+              {ledgers.map(ledger => (
+                <CommandItem key={ledger.id}>{ledger.name}</CommandItem>
+              ))}
             </CommandGroup>
           </CommandList>
         </Command>
