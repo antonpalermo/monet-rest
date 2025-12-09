@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  index,
+  jsonb
+} from "drizzle-orm/pg-core";
 
 import { nanoid } from "../libs/nanoid";
 
@@ -95,6 +102,26 @@ export const ledger = pgTable(
   table => [index("ledger_userId_idx").on(table.userId)]
 );
 
+export const metadata = pgTable(
+  "metadata",
+  {
+    id: text("id")
+      .unique()
+      .primaryKey()
+      .$default(() => nanoid()),
+    defaults: jsonb(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull()
+  },
+  table => [index("metadata_userId_idx").on(table.userId)]
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
@@ -118,6 +145,13 @@ export const accountRelations = relations(account, ({ one }) => ({
 export const ledgerRelations = relations(ledger, ({ one }) => ({
   user: one(user, {
     fields: [ledger.userId],
+    references: [user.id]
+  })
+}));
+
+export const metaRelations = relations(metadata, ({ one }) => ({
+  user: one(user, {
+    fields: [metadata.userId],
     references: [user.id]
   })
 }));
