@@ -122,10 +122,11 @@ export const metadata = pgTable(
   table => [index("metadata_userId_idx").on(table.userId)]
 );
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
-  ledgers: many(ledger)
+  ledgers: many(ledger),
+  metadata: one(metadata)
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
