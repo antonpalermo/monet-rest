@@ -3,7 +3,13 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/neon-http";
 
-import { account, session, user, verification } from "../database/schemas";
+import {
+  account,
+  metadata,
+  session,
+  user,
+  verification
+} from "../database/schemas";
 import { nanoid } from "../libs/nanoid";
 
 export type Session = ReturnType<typeof betterAuth>["$Infer"]["Session"];
@@ -38,6 +44,15 @@ export const auth = (
       google: {
         clientId: env.GOOGLE_OAUTH_CLIENT_ID,
         clientSecret: env.GOOGLE_OAUTH_CLIENT_SECRET
+      }
+    },
+    databaseHooks: {
+      user: {
+        create: {
+          after: async user => {
+            await db.insert(metadata).values({ userId: user.id });
+          }
+        }
       }
     }
   });
