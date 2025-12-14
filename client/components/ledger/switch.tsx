@@ -15,6 +15,10 @@ import { useLedger } from "@hooks/use-ledger";
 export function LedgerSwitch() {
   const { ledgers } = useLedger();
 
+  const LedgerItems = ledgers.map(ledger => (
+    <CommandItem key={ledger.id}>{ledger.name}</CommandItem>
+  ));
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -32,11 +36,7 @@ export function LedgerSwitch() {
           <CommandInput placeholder="Search Ledger" />
           <CommandList>
             <CommandEmpty>Ledger not found</CommandEmpty>
-            <CommandGroup>
-              {ledgers.map(ledger => (
-                <CommandItem key={ledger.id}>{ledger.name}</CommandItem>
-              ))}
-            </CommandGroup>
+            <CommandGroup>{ledgers && LedgerItems}</CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>
