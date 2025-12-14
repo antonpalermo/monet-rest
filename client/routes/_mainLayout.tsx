@@ -1,14 +1,19 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@ui/button";
 import { LedgerSwitch } from "@components/ledger/switch";
 import { CreateLedgerDialog } from "@client/components/ledger/create-dialog";
+
+import { useSession } from "@hooks/use-session";
 
 export const Route = createFileRoute("/_mainLayout")({
   component: LayoutComponent
 });
 
 function LayoutComponent() {
+  const { signOut } = useSession();
+  const navigate = useNavigate();
+
   return (
     <div>
       <header className="px-5">
@@ -18,7 +23,17 @@ function LayoutComponent() {
             <CreateLedgerDialog />
           </div>
           <span className="mx-auto"></span>
-          <Button>Sign Out</Button>
+          <Button
+            onClick={() =>
+              signOut(async () => {
+                navigate({
+                  to: "/signin"
+                });
+              })
+            }
+          >
+            Sign Out
+          </Button>
         </nav>
       </header>
       <hr />
