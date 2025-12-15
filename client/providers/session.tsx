@@ -37,6 +37,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  if (isPending) {
+    return null;
+  }
+
   return (
     <SessionContext.Provider
       value={{
