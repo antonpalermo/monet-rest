@@ -9,23 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestRouteImport } from './routes/test'
-import { Route as SigninRouteImport } from './routes/signin'
 import { Route as MainLayoutRouteImport } from './routes/_mainLayout'
+import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
 import { Route as MainLayoutIndexRouteImport } from './routes/_mainLayout/index'
+import { Route as MainLayoutTestRouteImport } from './routes/_mainLayout/test'
+import { Route as AuthLayoutSigninRouteImport } from './routes/_authLayout/signin'
 
-const TestRoute = TestRouteImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SigninRoute = SigninRouteImport.update({
-  id: '/signin',
-  path: '/signin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MainLayoutRoute = MainLayoutRouteImport.update({
   id: '/_mainLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLayoutRoute = AuthLayoutRouteImport.update({
+  id: '/_authLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MainLayoutIndexRoute = MainLayoutIndexRouteImport.update({
@@ -33,22 +28,33 @@ const MainLayoutIndexRoute = MainLayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainLayoutRoute,
 } as any)
+const MainLayoutTestRoute = MainLayoutTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => MainLayoutRoute,
+} as any)
+const AuthLayoutSigninRoute = AuthLayoutSigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/signin': typeof SigninRoute
-  '/test': typeof TestRoute
+  '/signin': typeof AuthLayoutSigninRoute
+  '/test': typeof MainLayoutTestRoute
   '/': typeof MainLayoutIndexRoute
 }
 export interface FileRoutesByTo {
-  '/signin': typeof SigninRoute
-  '/test': typeof TestRoute
+  '/signin': typeof AuthLayoutSigninRoute
+  '/test': typeof MainLayoutTestRoute
   '/': typeof MainLayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authLayout': typeof AuthLayoutRouteWithChildren
   '/_mainLayout': typeof MainLayoutRouteWithChildren
-  '/signin': typeof SigninRoute
-  '/test': typeof TestRoute
+  '/_authLayout/signin': typeof AuthLayoutSigninRoute
+  '/_mainLayout/test': typeof MainLayoutTestRoute
   '/_mainLayout/': typeof MainLayoutIndexRoute
 }
 export interface FileRouteTypes {
@@ -56,36 +62,34 @@ export interface FileRouteTypes {
   fullPaths: '/signin' | '/test' | '/'
   fileRoutesByTo: FileRoutesByTo
   to: '/signin' | '/test' | '/'
-  id: '__root__' | '/_mainLayout' | '/signin' | '/test' | '/_mainLayout/'
+  id:
+    | '__root__'
+    | '/_authLayout'
+    | '/_mainLayout'
+    | '/_authLayout/signin'
+    | '/_mainLayout/test'
+    | '/_mainLayout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
   MainLayoutRoute: typeof MainLayoutRouteWithChildren
-  SigninRoute: typeof SigninRoute
-  TestRoute: typeof TestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test': {
-      id: '/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/signin': {
-      id: '/signin'
-      path: '/signin'
-      fullPath: '/signin'
-      preLoaderRoute: typeof SigninRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_mainLayout': {
       id: '/_mainLayout'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof MainLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authLayout': {
+      id: '/_authLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_mainLayout/': {
@@ -95,14 +99,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainLayoutIndexRouteImport
       parentRoute: typeof MainLayoutRoute
     }
+    '/_mainLayout/test': {
+      id: '/_mainLayout/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof MainLayoutTestRouteImport
+      parentRoute: typeof MainLayoutRoute
+    }
+    '/_authLayout/signin': {
+      id: '/_authLayout/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof AuthLayoutSigninRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
   }
 }
 
+interface AuthLayoutRouteChildren {
+  AuthLayoutSigninRoute: typeof AuthLayoutSigninRoute
+}
+
+const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLayoutSigninRoute: AuthLayoutSigninRoute,
+}
+
+const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
+  AuthLayoutRouteChildren,
+)
+
 interface MainLayoutRouteChildren {
+  MainLayoutTestRoute: typeof MainLayoutTestRoute
   MainLayoutIndexRoute: typeof MainLayoutIndexRoute
 }
 
 const MainLayoutRouteChildren: MainLayoutRouteChildren = {
+  MainLayoutTestRoute: MainLayoutTestRoute,
   MainLayoutIndexRoute: MainLayoutIndexRoute,
 }
 
@@ -111,9 +143,8 @@ const MainLayoutRouteWithChildren = MainLayoutRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthLayoutRoute: AuthLayoutRouteWithChildren,
   MainLayoutRoute: MainLayoutRouteWithChildren,
-  SigninRoute: SigninRoute,
-  TestRoute: TestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

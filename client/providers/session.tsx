@@ -21,9 +21,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const { data, isPending } = authClient.useSession();
 
   async function socialSignIn(provider: "google") {
+    const paramString = window.location.search;
+    const searchParam = new URLSearchParams(paramString);
+
+    const redirectPath = searchParam.get("redirect");
+
     await authClient.signIn.social({
       provider,
-      callbackURL: "/"
+      callbackURL: redirectPath ? redirectPath : "/"
     });
   }
 
@@ -35,6 +40,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         onSuccess
       }
     });
+  }
+
+  if (isPending) {
+    return null;
   }
 
   return (
