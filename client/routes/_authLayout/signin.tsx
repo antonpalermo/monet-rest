@@ -41,9 +41,9 @@ function RouteComponent() {
               <div className="flex size-8 items-center justify-center rounded-md">
                 <GalleryVerticalEnd className="size-6" />
               </div>
-              <span className="sr-only">Acme Inc.</span>
+              <span className="sr-only">Monet.</span>
             </a>
-            <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+            <h1 className="text-xl font-bold">Welcome to Monet.</h1>
             <FieldDescription>
               Don&apos;t have an account? <a href="#">Sign up</a>
             </FieldDescription>
