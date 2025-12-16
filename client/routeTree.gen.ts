@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SigninRouteImport } from './routes/signin'
 import { Route as MainLayoutRouteImport } from './routes/_mainLayout'
+import { Route as AuthLayoutRouteImport } from './routes/_authLayout'
 import { Route as MainLayoutIndexRouteImport } from './routes/_mainLayout/index'
 import { Route as MainLayoutTestRouteImport } from './routes/_mainLayout/test'
+import { Route as AuthLayoutSigninRouteImport } from './routes/_authLayout/signin'
 
-const SigninRoute = SigninRouteImport.update({
-  id: '/signin',
-  path: '/signin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MainLayoutRoute = MainLayoutRouteImport.update({
   id: '/_mainLayout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLayoutRoute = AuthLayoutRouteImport.update({
+  id: '/_authLayout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MainLayoutIndexRoute = MainLayoutIndexRouteImport.update({
@@ -33,21 +33,27 @@ const MainLayoutTestRoute = MainLayoutTestRouteImport.update({
   path: '/test',
   getParentRoute: () => MainLayoutRoute,
 } as any)
+const AuthLayoutSigninRoute = AuthLayoutSigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/signin': typeof SigninRoute
+  '/signin': typeof AuthLayoutSigninRoute
   '/test': typeof MainLayoutTestRoute
   '/': typeof MainLayoutIndexRoute
 }
 export interface FileRoutesByTo {
-  '/signin': typeof SigninRoute
+  '/signin': typeof AuthLayoutSigninRoute
   '/test': typeof MainLayoutTestRoute
   '/': typeof MainLayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authLayout': typeof AuthLayoutRouteWithChildren
   '/_mainLayout': typeof MainLayoutRouteWithChildren
-  '/signin': typeof SigninRoute
+  '/_authLayout/signin': typeof AuthLayoutSigninRoute
   '/_mainLayout/test': typeof MainLayoutTestRoute
   '/_mainLayout/': typeof MainLayoutIndexRoute
 }
@@ -58,31 +64,32 @@ export interface FileRouteTypes {
   to: '/signin' | '/test' | '/'
   id:
     | '__root__'
+    | '/_authLayout'
     | '/_mainLayout'
-    | '/signin'
+    | '/_authLayout/signin'
     | '/_mainLayout/test'
     | '/_mainLayout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
   MainLayoutRoute: typeof MainLayoutRouteWithChildren
-  SigninRoute: typeof SigninRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signin': {
-      id: '/signin'
-      path: '/signin'
-      fullPath: '/signin'
-      preLoaderRoute: typeof SigninRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_mainLayout': {
       id: '/_mainLayout'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof MainLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authLayout': {
+      id: '/_authLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_mainLayout/': {
@@ -99,8 +106,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainLayoutTestRouteImport
       parentRoute: typeof MainLayoutRoute
     }
+    '/_authLayout/signin': {
+      id: '/_authLayout/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof AuthLayoutSigninRouteImport
+      parentRoute: typeof AuthLayoutRoute
+    }
   }
 }
+
+interface AuthLayoutRouteChildren {
+  AuthLayoutSigninRoute: typeof AuthLayoutSigninRoute
+}
+
+const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLayoutSigninRoute: AuthLayoutSigninRoute,
+}
+
+const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
+  AuthLayoutRouteChildren,
+)
 
 interface MainLayoutRouteChildren {
   MainLayoutTestRoute: typeof MainLayoutTestRoute
@@ -117,8 +143,8 @@ const MainLayoutRouteWithChildren = MainLayoutRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthLayoutRoute: AuthLayoutRouteWithChildren,
   MainLayoutRoute: MainLayoutRouteWithChildren,
-  SigninRoute: SigninRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
