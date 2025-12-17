@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
 
 import { ledger } from "../database/schemas";
@@ -43,11 +44,7 @@ app.get("/", async ctx => {
   const user = ctx.get("user");
 
   if (!user) {
-    return ctx.json({
-      data: undefined,
-      success: false,
-      message: "unauthorized"
-    });
+    throw new HTTPException(401, { message: "unauthorized" });
   }
 
   // TODO: only return ledgers that are belong to a user and
