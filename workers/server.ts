@@ -60,11 +60,19 @@ app.route("/ledgers", ledgerRoutes);
 app.route("/entries", entriesRoutes);
 
 app.onError((err, ctx) => {
-  console.error(err);
   if (err instanceof HTTPException) {
-    err.getResponse();
+    const response = err.getResponse();
+
+    switch (response.status) {
+      case 401:
+        return ctx.json(
+          { success: false, message: "unauthorized access" },
+          401
+        );
+    }
   }
 
+  // default fallback value
   return ctx.json(
     {
       success: false,
