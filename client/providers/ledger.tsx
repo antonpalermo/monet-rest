@@ -49,11 +49,6 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
 
   async function getAllLedgersFn() {
     const result = await fetch("/api/ledgers");
-
-    if (!result.ok) {
-      throw new Error("unable to get all ledgers");
-    }
-
     return await result.json();
   }
 
