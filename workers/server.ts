@@ -3,8 +3,7 @@ import { logger } from "hono/logger";
 import { HTTPException } from "hono/http-exception";
 import { secureHeaders } from "hono/secure-headers";
 
-import { neon } from "@neondatabase/serverless";
-import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
+import { drizzle, type NeonDatabase } from "drizzle-orm/neon-serverless";
 
 import ledgerRoutes from "./routes/ledgers";
 import entriesRoutes from "./routes/entries";
@@ -13,7 +12,7 @@ import { auth, type Session } from "./libs/auth";
 export type AppEnv = {
   Bindings: CloudflareBindings;
   Variables: {
-    db: NeonHttpDatabase;
+    db: NeonDatabase;
     user: Session["user"] | null;
     session: Session["session"] | null;
   };
@@ -46,8 +45,7 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx, next) => {
-  const neonClient = neon(ctx.env.DATABASE_URL);
-  const db = drizzle(neonClient);
+  const db = drizzle(ctx.env.DATABASE_URL);
   // set db context.
   ctx.set("db", db);
   // proceed with the next step.

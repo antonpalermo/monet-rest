@@ -1,7 +1,6 @@
-import { neon } from "@neondatabase/serverless";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/neon-serverless";
 
 import {
   account,
@@ -17,8 +16,7 @@ export type Session = ReturnType<typeof betterAuth>["$Infer"]["Session"];
 export const auth = (
   env: CloudflareBindings
 ): ReturnType<typeof betterAuth> => {
-  const psql = neon(env.DATABASE_URL);
-  const db = drizzle(psql);
+  const db = drizzle(env.DATABASE_URL);
 
   return betterAuth({
     appName: "Monet",
